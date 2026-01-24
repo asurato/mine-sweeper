@@ -166,6 +166,20 @@ export function revealAllMines(board: Board): Board {
   return newBoard;
 }
 
+export function flagAllMines(board: Board): Board {
+  const newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
+
+  for (const row of newBoard) {
+    for (const cell of row) {
+      if (cell.isMine) {
+        cell.isFlagged = true;
+      }
+    }
+  }
+
+  return newBoard;
+}
+
 export function countFlags(board: Board): number {
   let count = 0;
   for (const row of board) {

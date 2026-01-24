@@ -10,6 +10,7 @@ import {
   chordCell,
   checkWin,
   revealAllMines,
+  flagAllMines,
   countFlags,
 } from '../game/board';
 
@@ -54,7 +55,7 @@ export function useGame(initialDifficulty: Difficulty) {
       } else {
         board = revealCell(board, row, col);
         if (checkWin(board)) {
-          board = revealAllMines(board);
+          board = flagAllMines(board);
           status = 'won';
         }
       }
@@ -99,7 +100,7 @@ export function useGame(initialDifficulty: Difficulty) {
       if (checkWin(board)) {
         return {
           ...prev,
-          board: revealAllMines(board),
+          board: flagAllMines(board),
           status: 'won' as const,
         };
       }

@@ -133,8 +133,11 @@ function chordCell(board: Board, row: number, col: number): { board: Board; hitM
 // 勝利判定
 function checkWin(board: Board, minesCount: number): boolean;
 
-// 全ての地雷を表示
+// 全ての地雷を表示（敗北時）
 function revealAllMines(board: Board): Board;
+
+// 全ての地雷に旗を立てる（勝利時）
+function flagAllMines(board: Board): Board;
 ```
 
 ### cell.ts
