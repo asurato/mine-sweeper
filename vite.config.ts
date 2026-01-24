@@ -7,5 +7,10 @@ export default defineConfig({
   base: '/minesweeper/',
   build: {
     outDir: 'dist/minesweeper',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index.js',
+      },
+    },
   },
 })
