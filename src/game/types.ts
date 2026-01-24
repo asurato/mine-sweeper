@@ -10,6 +10,7 @@ export type CellState = {
   isMine: boolean;
   isRevealed: boolean;
   isFlagged: boolean;
+  isExploded: boolean;
   adjacentMines: number;
 };
 

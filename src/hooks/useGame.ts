@@ -50,7 +50,7 @@ export function useGame(initialDifficulty: Difficulty) {
       }
 
       if (board[row][col].isMine) {
-        board = revealAllMines(board);
+        board = revealAllMines(board, row, col);
         status = 'lost';
       } else {
         board = revealCell(board, row, col);
@@ -88,11 +88,11 @@ export function useGame(initialDifficulty: Difficulty) {
     setGameState((prev) => {
       if (prev.status === 'won' || prev.status === 'lost') return prev;
 
-      const { board, hitMine } = chordCell(prev.board, row, col);
+      const { board, hitMine, explodedRow, explodedCol } = chordCell(prev.board, row, col);
       if (hitMine) {
         return {
           ...prev,
-          board: revealAllMines(board),
+          board: revealAllMines(board, explodedRow, explodedCol),
           status: 'lost' as const,
         };
       }

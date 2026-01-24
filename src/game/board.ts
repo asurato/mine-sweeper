@@ -10,6 +10,7 @@ export function createEmptyBoard(rows: number, cols: number): Board {
         isMine: false,
         isRevealed: false,
         isFlagged: false,
+        isExploded: false,
         adjacentMines: 0,
       });
     }
@@ -106,7 +107,7 @@ export function chordCell(
   board: Board,
   row: number,
   col: number
-): { board: Board; hitMine: boolean } {
+): { board: Board; hitMine: boolean; explodedRow?: number; explodedCol?: number } {
   const rows = board.length;
   const cols = board[0].length;
   let newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
@@ -127,18 +128,24 @@ export function chordCell(
   }
 
   let hitMine = false;
+  let explodedRow: number | undefined;
+  let explodedCol: number | undefined;
   for (const [ar, ac] of adjacent) {
     if (!newBoard[ar][ac].isFlagged && !newBoard[ar][ac].isRevealed) {
       if (newBoard[ar][ac].isMine) {
         hitMine = true;
         newBoard[ar][ac].isRevealed = true;
+        if (explodedRow === undefined) {
+          explodedRow = ar;
+          explodedCol = ac;
+        }
       } else {
         newBoard = revealCell(newBoard, ar, ac);
       }
     }
   }
 
-  return { board: newBoard, hitMine };
+  return { board: newBoard, hitMine, explodedRow, explodedCol };
 }
 
 export function checkWin(board: Board): boolean {
@@ -152,13 +159,21 @@ export function checkWin(board: Board): boolean {
   return true;
 }
 
-export function revealAllMines(board: Board): Board {
+export function revealAllMines(
+  board: Board,
+  explodedRow?: number,
+  explodedCol?: number
+): Board {
   const newBoard = board.map((r) => r.map((cell) => ({ ...cell })));
 
-  for (const row of newBoard) {
-    for (const cell of row) {
+  for (let r = 0; r < newBoard.length; r++) {
+    for (let c = 0; c < newBoard[r].length; c++) {
+      const cell = newBoard[r][c];
       if (cell.isMine) {
         cell.isRevealed = true;
+        if (r === explodedRow && c === explodedCol) {
+          cell.isExploded = true;
+        }
       }
     }
   }
